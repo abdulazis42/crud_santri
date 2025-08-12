@@ -1,0 +1,6 @@
+# File dan folder yang diabaikan Git
+/vendor/
+/node_modules/
+.env
+*.log
+.DS_Store
