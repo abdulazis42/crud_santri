@@ -86,6 +86,46 @@
                 margin-left: 0;
             }
         }
+        
+        /* Status Badge Styles */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Empty State Styles */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .empty-state h5 {
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+        .empty-state p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -103,6 +143,10 @@
                 <i class="fas fa-users me-2"></i>
                 Daftar Santri
             </a>
+            <a class="nav-link" href="tagihan_santri.php">
+                <i class="fas fa-file-invoice me-2"></i>
+                Tagihan
+            </a>
             <a class="nav-link" href="jenis_tagihan.php">
                 <i class="fas fa-file-invoice me-2"></i>
                 Jenis Tagihan
@@ -110,6 +154,10 @@
             <a class="nav-link" href="sistem_diskon_new.php">
                 <i class="fas fa-percentage me-2"></i>
                 Sistem Diskon
+            </a>
+            <a class="nav-link" href="setting.php">
+                <i class="fas fa-cogs me-2"></i>
+                Setting
             </a>
         </nav>
         
@@ -146,6 +194,23 @@
             </div>
             
             <div class="card-body">
+                <div class="mb-3">
+                    <div class="row g-2">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" id="search-input" class="form-control" placeholder="Cari berdasarkan nama, kelas, atau nomor HP...">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="status-filter" class="form-select">
+                                <option value="all">Semua Status</option>
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div id="santri-table-container">
                     <div class="text-center">
                         <div class="spinner-border" role="status">
@@ -167,7 +232,7 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="add-form">
+                <form id="add-form" method="POST">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="nama" class="form-label">Nama Santri</label>
@@ -180,6 +245,12 @@
                         <div class="mb-3">
                             <label for="nomor_hp" class="form-label">Nomor HP</label>
                             <input type="text" class="form-control" id="nomor_hp" name="nomor_hp" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kategori_diskon_id" class="form-label">Kategori Diskon</label>
+                            <select class="form-select" id="kategori_diskon_id" name="kategori_diskon_id">
+                                <option value="">Pilih Kategori Diskon (Opsional)</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
@@ -225,6 +296,12 @@
                             <input type="text" class="form-control" id="edit_nomor_hp" name="nomor_hp" required>
                         </div>
                         <div class="mb-3">
+                            <label for="edit_kategori_diskon_id" class="form-label">Kategori Diskon</label>
+                            <select class="form-select" id="edit_kategori_diskon_id" name="kategori_diskon_id">
+                                <option value="">Pilih Kategori Diskon (Opsional)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="edit_aktif" name="aktif" value="1">
                                 <label class="form-check-label" for="edit_aktif">
@@ -247,11 +324,97 @@
         // Load data when page loads
         document.addEventListener('DOMContentLoaded', function() {
             loadSantriTable();
+            loadKategoriDiskonDropdown();
+
+            document.getElementById('search-input').addEventListener('keyup', function() {
+                loadSantriTable();
+            });
+
+            document.getElementById('status-filter').addEventListener('change', function() {
+                loadSantriTable();
+            });
+
+            document.getElementById('add-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                formData.append('action', 'add_santri');
+                
+                fetch('./api_handler.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addModal'));
+                        modal.hide();
+                        this.reset();
+                        loadSantriTable();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            });
+
+            document.getElementById('edit-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                formData.append('action', 'update_santri');
+                
+                fetch('api_handler.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                        modal.hide();
+                        loadSantriTable();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            });
         });
+
+        // Load Kategori Diskon Dropdown
+        function loadKategoriDiskonDropdown() {
+            fetch('api_handler.php?action=get_kategori_diskon_dropdown')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const addSelect = document.getElementById('kategori_diskon_id');
+                        const editSelect = document.getElementById('edit_kategori_diskon_id');
+                        
+                        if (addSelect) {
+                            addSelect.innerHTML = '<option value="">Pilih Kategori Diskon (Opsional)</option>';
+                            data.data.forEach(item => {
+                                addSelect.innerHTML += `<option value="${item.id}">${item.nama}</option>`;
+                            });
+                        }
+                        
+                        if (editSelect) {
+                            editSelect.innerHTML = '<option value="">Pilih Kategori Diskon (Opsional)</option>';
+                            data.data.forEach(item => {
+                                editSelect.innerHTML += `<option value="${item.id}">${item.nama}</option>`;
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading kategori diskon dropdown:', error);
+                });
+        }
+
 
         // Load Santri Table
         function loadSantriTable() {
-            fetch('api_handler.php?action=get_santri')
+            const search = document.getElementById('search-input').value;
+            const status_filter = document.getElementById('status-filter').value;
+            const url = `api_handler.php?action=get_santri&search=${encodeURIComponent(search)}&status_filter=${status_filter}`;
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -273,14 +436,50 @@
         }
 
         // Edit Santri
-        function editSantri(id, nama, kelas, nomor_hp, is_aktif) {
+        function editSantri(id, nama, kelas, nomor_hp, is_aktif, kategori_diskon_id) {
             document.getElementById('edit_id').value = id;
             document.getElementById('edit_nama').value = nama;
             document.getElementById('edit_kelas').value = kelas;
             document.getElementById('edit_nomor_hp').value = nomor_hp;
             document.getElementById('edit_aktif').checked = is_aktif == 1;
+            document.getElementById('edit_kategori_diskon_id').value = kategori_diskon_id || '';
             const modal = new bootstrap.Modal(document.getElementById('editModal'));
             modal.show();
+        }
+
+        // Edit Tagihan
+        function editTagihan(id, nama_tagihan, jenis_tagihan_id, tanggal_tagihan, deadline_tagihan, target) {
+            document.getElementById('edit_tagihan_id').value = id;
+            document.getElementById('edit_nama_tagihan').value = nama_tagihan;
+            document.getElementById('edit_tanggal_tagihan').value = tanggal_tagihan;
+            document.getElementById('edit_deadline_tagihan').value = deadline_tagihan;
+            document.getElementById('edit_target').value = target;
+            loadJenisTagihanDropdownEdit(jenis_tagihan_id);
+            const modal = new bootstrap.Modal(document.getElementById('editTagihanModal'));
+            modal.show();
+        }
+
+        // Delete Tagihan
+        function deleteTagihan(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus tagihan ini?')) {
+                const formData = new FormData();
+                formData.append('action', 'delete_tagihan');
+                formData.append('id', id);
+                
+                fetch('api_handler.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Tagihan berhasil dihapus!');
+                        loadTagihanTable();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+            }
         }
 
         // Delete Santri
@@ -305,52 +504,6 @@
                 });
             }
         }
-
-        // Form Handlers
-        document.getElementById('add-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'add_santri');
-            
-            fetch('api_handler.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Santri berhasil ditambahkan!');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('addModal'));
-                    modal.hide();
-                    this.reset();
-                    loadSantriTable();
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            });
-        });
-
-        document.getElementById('edit-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'update_santri');
-            
-            fetch('api_handler.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Santri berhasil diperbarui!');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-                    modal.hide();
-                    loadSantriTable();
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            });
-        });
     </script>
 </body>
 </html> 

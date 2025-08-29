@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jenis Tagihan - Pondok Pesantren</title>
+    <title>Tagihan Santri - Pondok Pesantren</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -103,11 +103,11 @@
                 <i class="fas fa-users me-2"></i>
                 Daftar Santri
             </a>
-            <a class="nav-link" href="tagihan_santri.php">
+            <a class="nav-link active" href="tagihan_santri.php">
                 <i class="fas fa-file-invoice me-2"></i>
                 Tagihan
             </a>
-            <a class="nav-link active" href="jenis_tagihan.php">
+            <a class="nav-link" href="jenis_tagihan.php">
                 <i class="fas fa-file-invoice me-2"></i>
                 Jenis Tagihan
             </a>
@@ -133,10 +133,9 @@
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2><i class="fas fa-file-invoice text-primary me-2"></i>Jenis Tagihan</h2>
-                <p class="text-muted mb-0">Kelola jenis-jenis tagihan untuk santri</p>
+                <h2><i class="fas fa-file-invoice text-primary me-2"></i>Tagihan Santri</h2>
+                <p class="text-muted mb-0">Kelola data tagihan santri</p>
             </div>
-            
         </div>
 
         <!-- Content Card -->
@@ -145,16 +144,16 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-list me-2"></i>
-                        Daftar Jenis Tagihan
+                        Daftar Tagihan
                     </h5>
-                    <button class="btn btn-success" onclick="showAddModal()">
-                        <i class="fas fa-plus me-2"></i>Tambah Jenis Tagihan
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTagihanModal">
+                        <i class="fas fa-plus me-2"></i>Tambah Tagihan
                     </button>
                 </div>
             </div>
             
             <div class="card-body">
-                <div id="jenis-tagihan-table-container">
+                <div id="tagihan-table-container">
                     <div class="text-center">
                         <div class="spinner-border" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -165,21 +164,39 @@
         </div>
     </div>
 
-    <!-- Add Modal -->
-    <div class="modal fade" id="addModal" tabindex="-1">
+    <!-- Add Tagihan Modal -->
+    <div class="modal fade" id="addTagihanModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-plus me-2"></i>Tambah Jenis Tagihan
+                        <i class="fas fa-plus me-2"></i>Tambah Tagihan
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="add-form">
+                <form id="add-tagihan-form">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nama_tagihan" class="form-label">Nama Jenis Tagihan</label>
+                            <label for="nama_tagihan" class="form-label">Nama Tagihan</label>
                             <input type="text" class="form-control" id="nama_tagihan" name="nama_tagihan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jenis_tagihan_id" class="form-label">Jenis Tagihan</label>
+                            <select class="form-select" id="jenis_tagihan_id" name="jenis_tagihan_id" required>
+                                <!-- Opsi jenis tagihan akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tanggal_tagihan" class="form-label">Tanggal Tagihan</label>
+                            <input type="date" class="form-control" id="tanggal_tagihan" name="tanggal_tagihan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deadline_tagihan" class="form-label">Deadline Tagihan</label>
+                            <input type="date" class="form-control" id="deadline_tagihan" name="deadline_tagihan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="target" class="form-label">Target</label>
+                            <input type="text" class="form-control" id="target" name="target" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -191,22 +208,40 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1">
+    <!-- Edit Tagihan Modal -->
+    <div class="modal fade" id="editTagihanModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-edit me-2"></i>Edit Jenis Tagihan
+                        <i class="fas fa-edit me-2"></i>Edit Tagihan
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="edit-form">
+                <form id="edit-tagihan-form">
                     <div class="modal-body">
-                        <input type="hidden" id="edit_id" name="id">
+                        <input type="hidden" id="edit_tagihan_id" name="id">
                         <div class="mb-3">
-                            <label for="edit_nama" class="form-label">Nama Jenis Tagihan</label>
-                            <input type="text" class="form-control" id="edit_nama" name="nama" required>
+                            <label for="edit_nama_tagihan" class="form-label">Nama Tagihan</label>
+                            <input type="text" class="form-control" id="edit_nama_tagihan" name="nama_tagihan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_jenis_tagihan_id" class="form-label">Jenis Tagihan</label>
+                            <select class="form-select" id="edit_jenis_tagihan_id" name="jenis_tagihan_id" required>
+                                <!-- Opsi jenis tagihan akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_tanggal_tagihan" class="form-label">Tanggal Tagihan</label>
+                            <input type="date" class="form-control" id="edit_tanggal_tagihan" name="tanggal_tagihan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_deadline_tagihan" class="form-label">Deadline Tagihan</label>
+                            <input type="date" class="form-control" id="edit_deadline_tagihan" name="deadline_tagihan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_target" class="form-label">Target</label>
+                            <input type="text" class="form-control" id="edit_target" name="target" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -220,47 +255,83 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Load data when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            loadJenisTagihanTable();
+            loadTagihanTable();
+            loadJenisTagihanDropdown();
         });
 
-        // Load Jenis Tagihan Table
-        function loadJenisTagihanTable() {
-            fetch('api_handler.php?action=get_jenis_tagihan')
+        function loadJenisTagihanDropdown() {
+            fetch('./api_handler.php?action=get_jenis_tagihan_dropdown')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('jenis-tagihan-table-container').innerHTML = data.html;
+                        const addSelect = document.getElementById('jenis_tagihan_id');
+                        const editSelect = document.getElementById('edit_jenis_tagihan_id');
+                        
+                        if(addSelect) {
+                            addSelect.innerHTML = '<option value="">Pilih Jenis Tagihan</option>';
+                            data.data.forEach(item => {
+                                addSelect.innerHTML += `<option value="${item.id}">${item.nama}</option>`;
+                            });
+                        }
+                        
+                        if(editSelect) {
+                            editSelect.innerHTML = '<option value="">Pilih Jenis Tagihan</option>';
+                            data.data.forEach(item => {
+                                editSelect.innerHTML += `<option value="${item.id}">${item.nama}</option>`;
+                            });
+                        }
+                    }
+                })
+                .catch(error => console.error('Error loading jenis tagihan:', error));
+        }
+
+        function loadJenisTagihanDropdownEdit(selectedId = null) {
+            fetch('./api_handler.php?action=get_jenis_tagihan_dropdown')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('edit_jenis_tagihan_id');
+                        select.innerHTML = '<option value="">Pilih Jenis Tagihan</option>';
+                        data.data.forEach(item => {
+                            const selected = item.id == selectedId ? 'selected' : '';
+                            select.innerHTML += `<option value="${item.id}" ${selected}>${item.nama}</option>`;
+                        });
+                    }
+                });
+        }
+
+        function loadTagihanTable() {
+            fetch('./api_handler.php?action=get_tagihan')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('tagihan-table-container').innerHTML = data.html;
                     } else {
-                        document.getElementById('jenis-tagihan-table-container').innerHTML = '<div class="alert alert-danger">Error: ' + data.message + '</div>';
+                        document.getElementById('tagihan-table-container').innerHTML = '<div class="alert alert-danger">Error: ' + data.message + '</div>';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    document.getElementById('jenis-tagihan-table-container').innerHTML = '<div class="alert alert-danger">Terjadi kesalahan saat memuat data</div>';
+                    document.getElementById('tagihan-table-container').innerHTML = '<div class="alert alert-danger">Terjadi kesalahan saat memuat data tagihan</div>';
                 });
         }
 
-        // Show Add Modal
-        function showAddModal() {
-            const modal = new bootstrap.Modal(document.getElementById('addModal'));
+        function editTagihan(id, nama_tagihan, jenis_tagihan_id, tanggal_tagihan, deadline_tagihan, target) {
+            document.getElementById('edit_tagihan_id').value = id;
+            document.getElementById('edit_nama_tagihan').value = nama_tagihan;
+            document.getElementById('edit_tanggal_tagihan').value = tanggal_tagihan;
+            document.getElementById('edit_deadline_tagihan').value = deadline_tagihan;
+            document.getElementById('edit_target').value = target;
+            loadJenisTagihanDropdownEdit(jenis_tagihan_id);
+            const modal = new bootstrap.Modal(document.getElementById('editTagihanModal'));
             modal.show();
         }
 
-        // Edit Jenis Tagihan
-        function editJenisTagihan(id, nama) {
-            document.getElementById('edit_id').value = id;
-            document.getElementById('edit_nama').value = nama;
-            const modal = new bootstrap.Modal(document.getElementById('editModal'));
-            modal.show();
-        }
-
-        // Delete Jenis Tagihan
-        function deleteJenisTagihan(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus jenis tagihan ini?')) {
+        function deleteTagihan(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus tagihan ini?')) {
                 const formData = new FormData();
-                formData.append('action', 'delete_jenis_tagihan');
+                formData.append('action', 'delete_tagihan');
                 formData.append('id', id);
                 
                 fetch('api_handler.php', {
@@ -270,8 +341,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Jenis tagihan berhasil dihapus!');
-                        loadJenisTagihanTable();
+                        alert('Tagihan berhasil dihapus!');
+                        loadTagihanTable();
                     } else {
                         alert('Error: ' + data.message);
                     }
@@ -279,11 +350,10 @@
             }
         }
 
-        // Form Handlers
-        document.getElementById('add-form').addEventListener('submit', function(e) {
+        document.getElementById('add-tagihan-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            formData.append('action', 'add_jenis_tagihan');
+            formData.append('action', 'add_tagihan');
             
             fetch('api_handler.php', {
                 method: 'POST',
@@ -292,21 +362,21 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Jenis tagihan berhasil ditambahkan!');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('addModal'));
+                    alert('Tagihan berhasil ditambahkan!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addTagihanModal'));
                     modal.hide();
                     this.reset();
-                    loadJenisTagihanTable();
+                    loadTagihanTable();
                 } else {
                     alert('Error: ' + data.message);
                 }
             });
         });
 
-        document.getElementById('edit-form').addEventListener('submit', function(e) {
+        document.getElementById('edit-tagihan-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            formData.append('action', 'update_jenis_tagihan');
+            formData.append('action', 'update_tagihan');
             
             fetch('api_handler.php', {
                 method: 'POST',
@@ -315,10 +385,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Jenis tagihan berhasil diperbarui!');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                    alert('Tagihan berhasil diperbarui!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editTagihanModal'));
                     modal.hide();
-                    loadJenisTagihanTable();
+                    loadTagihanTable();
                 } else {
                     alert('Error: ' + data.message);
                 }

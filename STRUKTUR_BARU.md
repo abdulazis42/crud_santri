@@ -32,7 +32,7 @@ Sistem sekarang memiliki **halaman terpisah** untuk setiap fungsi manajemen, sep
   - Hapus jenis tagihan
 - **Navigasi**: Sidebar lengkap dengan semua menu
 
-#### 4. **`sistem_diskon.php`** - Sistem Diskon
+#### 4. **`sistem_diskon_new.php`** - Sistem Diskon
 - **Fungsi**: Halaman khusus untuk mengelola sistem diskon
 - **Fitur**:
   - Tab Kategori Diskon
@@ -60,7 +60,7 @@ Sistem sekarang memiliki **halaman terpisah** untuk setiap fungsi manajemen, sep
 ├── ✏️ Form Edit
 └── 🗑️ Hapus Jenis Tagihan
 
-💰 Sistem Diskon (sistem_diskon.php)
+💰 Sistem Diskon (sistem_diskon_new.php)
 ├── 🏷️ Tab Kategori Diskon
 ├── ⚙️ Tab Aturan Diskon
 ├── 🧮 Tab Kalkulator Diskon
@@ -96,7 +96,7 @@ Sistem sekarang memiliki **halaman terpisah** untuk setiap fungsi manajemen, sep
 #### **Akses Langsung**
 - **Santri**: `http://localhost:8000/index.php`
 - **Jenis Tagihan**: `http://localhost:8000/jenis_tagihan.php`
-- **Sistem Diskon**: `http://localhost:8000/sistem_diskon.php`
+- **Sistem Diskon**: `http://localhost:8000/sistem_diskon_new.php`
 
 ### 📱 **Responsive Design**
 

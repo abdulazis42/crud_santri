@@ -82,7 +82,7 @@ http://localhost:8000/setup_database.php
 ### 2. **Lihat Demo Sistem**
 ```bash
 # Buka browser dan akses:
-http://localhost:8000/demo_sistem_diskon.php
+http://localhost:8000/sistem_diskon_new.php
 ```
 
 ### 3. **Akses Dashboard Lengkap**
@@ -100,7 +100,7 @@ http://localhost:8000/dashboard.php
 
 ### 🆕 **Files Baru**
 - `setup_database.php` - Setup database otomatis
-- `demo_sistem_diskon.php` - Demo fitur baru
+- `sistem_diskon_new.php` - Sistem diskon lengkap
 - `CHANGELOG.md` - Dokumentasi perubahan
 - `RINGKASAN_PERUBAHAN.md` - Ringkasan ini
 - `DISCOUNT_DATABASE_DOCUMENTATION.md` - Dokumentasi database
@@ -141,7 +141,7 @@ http://localhost:8000/dashboard.php
 3. Pastikan semua tabel terbuat
 
 ### **Langkah 2: Test Demo**
-1. Buka `http://localhost:8000/demo_sistem_diskon.php`
+1. Buka `http://localhost:8000/sistem_diskon_new.php`
 2. Lihat fitur-fitur baru
 3. Test kalkulator diskon
 

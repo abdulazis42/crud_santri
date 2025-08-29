@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Setting API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Setting API</h1>
+    
+    <div class="test-section">
+        <h3>1. Test API Endpoint</h3>
+        <button onclick="testAPI()">Test API get_setting</button>
+        <div id="api-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Test Database Connection</h3>
+        <button onclick="testDatabase()">Test Database</button>
+        <div id="db-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Test Form Setting</h3>
+        <button onclick="testForm()">Test Form</button>
+        <div id="form-result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Debug Information</h3>
+        <div id="debug-info"></div>
+    </div>
+    
+    <hr>
+    <p><a href="setting.php">Go to Setting Page</a></p>
+    <p><a href="debug_setting.php">Go to Debug Page</a></p>
+
+    <script>
+        // Test API Endpoint
+        async function testAPI() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '<p class="info">Testing API...</p>';
+            
+            try {
+                const response = await fetch('api_handler.php?action=get_setting');
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ API Response Successful</p>
+                        <p><strong>HTML Length:</strong> ${data.html ? data.html.length : 'No HTML'}</p>
+                        <p><strong>Response:</strong></p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ API Response Failed</p>
+                        <p><strong>Error:</strong> ${data.message || 'Unknown error'}</p>
+                        <p><strong>Response:</strong></p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Fetch Error</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Test Database (indirectly through API)
+        async function testDatabase() {
+            const resultDiv = document.getElementById('db-result');
+            resultDiv.innerHTML = '<p class="info">Testing database through API...</p>';
+            
+            try {
+                // Test a simple database operation through API
+                const response = await fetch('api_handler.php?action=get_setting');
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Database connection successful (through API)</p>
+                        <p><strong>Data retrieved:</strong> ${data.html ? 'Yes' : 'No'}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ Database connection failed (through API)</p>
+                        <p><strong>Error:</strong> ${data.message || 'Unknown error'}</p>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Database test failed</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Test Form
+        function testForm() {
+            const resultDiv = document.getElementById('form-result');
+            resultDiv.innerHTML = '<p class="info">Testing form elements...</p>';
+            
+            // Check if we can access the setting page
+            fetch('setting.php')
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error(`HTTP ${response.status}`);
+                })
+                .then(html => {
+                    // Check for key elements
+                    const hasTableContainer = html.includes('setting-table-container');
+                    const hasLoadFunction = html.includes('loadSettingTable');
+                    const hasAPI = html.includes('api_handler.php');
+                    
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Setting page accessible</p>
+                        <p><strong>Table Container:</strong> ${hasTableContainer ? '✅ Found' : '❌ Missing'}</p>
+                        <p><strong>Load Function:</strong> ${hasLoadFunction ? '✅ Found' : '❌ Missing'}</p>
+                        <p><strong>API Reference:</strong> ${hasAPI ? '✅ Found' : '❌ Missing'}</p>
+                    `;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ Cannot access setting page</p>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    `;
+                });
+        }
+        
+        // Show debug info
+        function showDebugInfo() {
+            const debugDiv = document.getElementById('debug-info');
+            debugDiv.innerHTML = `
+                <h4>Browser Information:</h4>
+                <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+                <p><strong>Current URL:</strong> ${window.location.href}</p>
+                <p><strong>Base URL:</strong> ${window.location.origin}${window.location.pathname}</p>
+                
+                <h4>Console Commands:</h4>
+                <p>Open browser console (F12) and run these commands:</p>
+                <pre>
+// Test API directly
+fetch('api_handler.php?action=get_setting')
+    .then(r => r.json())
+    .then(data => console.log('API Response:', data))
+    .catch(err => console.error('Error:', err));
+
+// Check for JavaScript errors
+console.log('Testing loadSettingTable function...');
+if (typeof loadSettingTable === 'function') {
+    console.log('✅ loadSettingTable function exists');
+} else {
+    console.log('❌ loadSettingTable function not found');
+}
+                </pre>
+            `;
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showDebugInfo();
+        });
+    </script>
+</body>
+</html>

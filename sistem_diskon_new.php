@@ -126,6 +126,10 @@
                 <i class="fas fa-users me-2"></i>
                 Daftar Santri
             </a>
+            <a class="nav-link" href="tagihan_santri.php">
+                <i class="fas fa-file-invoice me-2"></i>
+                Tagihan
+            </a>
             <a class="nav-link" href="jenis_tagihan.php">
                 <i class="fas fa-file-invoice me-2"></i>
                 Jenis Tagihan
@@ -133,6 +137,10 @@
             <a class="nav-link active" href="sistem_diskon_new.php">
                 <i class="fas fa-percentage me-2"></i>
                 Sistem Diskon
+            </a>
+            <a class="nav-link" href="setting.php">
+                <i class="fas fa-cogs me-2"></i>
+                Setting
             </a>
         </nav>
         
@@ -202,6 +210,9 @@
 
 				<!-- Inline Add Kategori (tepat di atas tabel) -->
 				<form id="inline-add-kategori-form" class="row g-2 align-items-end mb-3">
+					<div class="col-12">
+						<div id="inline-add-kategori-error-message" class="alert alert-danger d-none mb-2"></div>
+					</div>
 					<div class="col-12 col-md-6 col-lg-5">
 						<label for="inline_nama_kategori" class="form-label mb-1">Tambah Kategori Baru</label>
 						<input type="text" class="form-control" id="inline_nama_kategori" name="nama" placeholder="Contoh: Anak Yatim" required>
@@ -336,6 +347,7 @@
 				</div>
 				<form id="add-kategori-form">
 					<div class="modal-body">
+						<div id="add-kategori-error-message" class="alert alert-danger d-none"></div>
 						<div class="mb-3">
 							<label for="nama_kategori" class="form-label">
 								<i class="fas fa-tag me-2"></i>Nama Kategori
@@ -366,6 +378,7 @@
 				</div>
 				<form id="add-aturan-form">
 					<div class="modal-body">
+						<div id="add-aturan-error-message" class="alert alert-danger d-none"></div>
 						<div class="row">
 							<div class="col-md-6 mb-3">
 								<label for="jenis_tagihan_aturan" class="form-label">
@@ -406,6 +419,82 @@
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
 						<button type="submit" class="btn btn-primary">
 							<i class="fas fa-plus me-2"></i>Tambah
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Edit Kategori Diskon -->
+	<div class="modal fade" id="editKategoriModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fas fa-edit me-2"></i>Edit Kategori Diskon
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<form id="edit-kategori-form">
+					<div class="modal-body">
+						<input type="hidden" id="edit_kategori_id" name="id">
+						<div class="mb-3">
+							<label for="edit_kategori_nama" class="form-label">Nama Kategori</label>
+							<input type="text" class="form-control" id="edit_kategori_nama" name="nama" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+						<button type="submit" class="btn btn-primary">
+							<i class="fas fa-save me-2"></i>Update
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Edit Aturan Diskon -->
+	<div class="modal fade" id="editAturanModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fas fa-edit me-2"></i>Edit Aturan Diskon
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<form id="edit-aturan-form">
+					<div class="modal-body">
+						<input type="hidden" id="edit_aturan_id" name="id">
+						<div class="mb-3">
+							<label for="edit_aturan_jenis_tagihan_id" class="form-label">Jenis Tagihan</label>
+							<select class="form-select" id="edit_aturan_jenis_tagihan_id" name="jenis_tagihan_id" required>
+								<option value="">Pilih Jenis Tagihan</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="edit_aturan_kategori_diskon_id" class="form-label">Kategori Diskon</label>
+							<select class="form-select" id="edit_aturan_kategori_diskon_id" name="kategori_diskon_id" required>
+								<option value="">Pilih Kategori Diskon</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="edit_aturan_diskon_persen" class="form-label">Persentase Diskon (%)</label>
+							<input type="number" class="form-control" id="edit_aturan_diskon_persen" name="diskon_persen" min="0" max="100" step="0.01" required>
+						</div>
+						<div class="mb-3">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="edit_aturan_is_aktif" name="is_aktif" value="1">
+								<label class="form-check-label" for="edit_aturan_is_aktif">Aktif</label>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+						<button type="submit" class="btn btn-primary">
+							<i class="fas fa-save me-2"></i>Update
 						</button>
 					</div>
 				</form>
@@ -563,6 +652,13 @@
 							data.data.forEach(it => sel.innerHTML += `<option value="${it.id}">${it.nama}</option>`);
 							console.log('Jenis tagihan dropdown updated');
 						}
+						
+						// Juga populate dropdown edit aturan
+						const editSel = document.getElementById('edit_aturan_jenis_tagihan_id');
+						if (editSel) {
+							editSel.innerHTML = '<option value="">Pilih Jenis Tagihan...</option>';
+							data.data.forEach(it => editSel.innerHTML += `<option value="${it.id}">${it.nama}</option>`);
+						}
 					}
 				})
 				.catch(error => console.error('Error loading jenis tagihan dropdown:', error));
@@ -577,6 +673,13 @@
 							sel.innerHTML = '<option value="">Pilih Kategori Diskon...</option>';
 							(data.data || []).forEach(it => sel.innerHTML += `<option value="${it.id}">${it.nama}</option>`);
 							console.log('Kategori diskon dropdown updated with', data.data.length, 'items');
+						}
+						
+						// Juga populate dropdown edit aturan
+						const editSel = document.getElementById('edit_aturan_kategori_diskon_id');
+						if (editSel) {
+							editSel.innerHTML = '<option value="">Pilih Kategori Diskon...</option>';
+							(data.data || []).forEach(it => editSel.innerHTML += `<option value="${it.id}">${it.nama}</option>`);
 						}
 					}
 				})
@@ -689,8 +792,16 @@
                     populateAturanDropdowns();
 						alert('Kategori diskon berhasil ditambahkan');
 					} else {
-						alert('Gagal menambah kategori: ' + data.message);
+						const errorMessageDiv = document.getElementById('add-kategori-error-message');
+						errorMessageDiv.textContent = 'Gagal menambah kategori: ' + data.message;
+						errorMessageDiv.classList.remove('d-none');
 					}
+				})
+				.catch(error => {
+					console.error('Fetch error (add-kategori-form):', error); // Tambahkan logging
+					const errorMessageDiv = document.getElementById('add-kategori-error-message');
+					errorMessageDiv.textContent = 'Terjadi kesalahan saat menambah kategori: ' + error.message; // Tampilkan pesan error
+					errorMessageDiv.classList.remove('d-none');
 				});
 		});
 
@@ -760,14 +871,18 @@
 						} else {
 							console.log('API error:', data.message);
 							// Show error feedback
-							alert('Gagal menambah kategori: ' + (data.message || '')); 
+							const inlineErrorMessageDiv = document.getElementById('inline-add-kategori-error-message');
+							inlineErrorMessageDiv.textContent = 'Gagal menambah kategori: ' + (data.message || 'Terjadi kesalahan.');
+							inlineErrorMessageDiv.classList.remove('d-none');
 							submitBtn.innerHTML = originalText;
 							submitBtn.className = 'btn btn-primary';
 						}
 					})
 					.catch(error => {
-						console.error('Fetch error:', error);
-						alert('Terjadi kesalahan saat menambah kategori');
+						console.error('Fetch error (inline-add-kategori-form):', error); // Tambahkan logging
+						const inlineErrorMessageDiv = document.getElementById('inline-add-kategori-error-message');
+						inlineErrorMessageDiv.textContent = 'Terjadi kesalahan saat menambah kategori: ' + error.message; // Tampilkan pesan error
+						inlineErrorMessageDiv.classList.remove('d-none');
 						submitBtn.innerHTML = originalText;
 						submitBtn.className = 'btn btn-primary';
 					})
@@ -781,36 +896,106 @@
 		}
 
 		// Handle submit: Tambah Aturan
-        // Submit Tambah Aturan (hindari multiple submit)
-        const addAturanForm = document.getElementById('add-aturan-form');
-        let isSubmittingAturan = false;
-        addAturanForm.addEventListener('submit', function(e) {
+		// Submit Tambah Aturan (hindari multiple submit)
+		const addAturanForm = document.getElementById('add-aturan-form');
+		let isSubmittingAturan = false;
+		addAturanForm.addEventListener('submit', function(e) {
+		    e.preventDefault();
+		    if (isSubmittingAturan) return; // cegah klik berulang
+		    isSubmittingAturan = true;
+		    const submitBtn = addAturanForm.querySelector('button[type="submit"]');
+		    const originalText = submitBtn.innerHTML;
+		    submitBtn.disabled = true;
+		    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+		    const formData = new FormData(addAturanForm);
+		    formData.append('action', 'add_diskon_rule');
+		    if (!formData.has('is_aktif')) { formData.append('is_aktif', '0'); }
+
+		    // Sembunyikan pesan error sebelumnya
+		    document.getElementById('add-aturan-error-message').classList.add('d-none');
+
+		    fetch('api_handler.php', { method: 'POST', body: formData })
+		        .then(r => r.json())
+		        .then(data => {
+		            if (data.success) {
+		                addAturanModalInstance && addAturanModalInstance.hide();
+		                addAturanForm.reset();
+		                loadAturanTable();
+		                alert('Aturan diskon berhasil ditambahkan!'); // Notifikasi sukses
+		            } else {
+		                const errorMessageDiv = document.getElementById('add-aturan-error-message');
+		                errorMessageDiv.textContent = 'Gagal menambah aturan: ' + (data.message || 'Terjadi kesalahan.');
+		                errorMessageDiv.classList.remove('d-none');
+		            }
+		        })
+		        .catch(error => {
+		            console.error('Fetch error (add-aturan-form):', error); // Tambahkan logging
+		            const errorMessageDiv = document.getElementById('add-aturan-error-message');
+		            errorMessageDiv.textContent = 'Terjadi kesalahan saat menambah aturan: ' + error.message; // Tampilkan pesan error
+		            errorMessageDiv.classList.remove('d-none');
+		        })
+		        .finally(() => {
+		            isSubmittingAturan = false;
+		            submitBtn.disabled = false;
+		            submitBtn.innerHTML = originalText;
+		        });
+		});
+
+        // Handle submit: Edit Kategori
+        document.getElementById('edit-kategori-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            if (isSubmittingAturan) return; // cegah klik berulang
-            isSubmittingAturan = true;
-            const submitBtn = addAturanForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
-            const formData = new FormData(addAturanForm);
-            formData.append('action', 'add_diskon_rule');
+            const formData = new FormData(this);
+            formData.append('action', 'update_kategori_diskon');
+            
+            fetch('api_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Kategori diskon berhasil diperbarui!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editKategoriModal'));
+                    modal.hide();
+                    loadKategoriTable();
+                    // Refresh dropdown pada modal aturan
+                    populateAturanDropdowns();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error (edit-kategori-form):', error); // Tambahkan logging
+                alert('Terjadi kesalahan saat memperbarui kategori diskon: ' + error.message); // Tampilkan pesan error
+            });
+        });
+
+        // Handle submit: Edit Aturan
+        document.getElementById('edit-aturan-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            formData.append('action', 'update_diskon_rule');
             if (!formData.has('is_aktif')) { formData.append('is_aktif', '0'); }
-            fetch('api_handler.php', { method: 'POST', body: formData })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        addAturanModalInstance && addAturanModalInstance.hide();
-                        addAturanForm.reset();
-                        loadAturanTable();
-                    } else {
-                        alert('Gagal menambah aturan: ' + (data.message || ''));
-                    }
-                })
-                .finally(() => {
-                    isSubmittingAturan = false;
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                });
+            
+            fetch('api_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Aturan diskon berhasil diperbarui!');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editAturanModal'));
+                    modal.hide();
+                    loadAturanTable();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error (edit-aturan-form):', error); // Tambahkan logging
+                alert('Terjadi kesalahan saat memperbarui aturan diskon: ' + error.message); // Tampilkan pesan error
+            });
         });
         });
 
@@ -847,9 +1032,82 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Test error:', error);
+                    console.error('Fetch error (testAddKategori):', error); // Tambahkan logging
                     alert('Test error: ' + error.message);
                 });
+        }
+
+        // Fungsi Edit Kategori Diskon
+        function editKategori(id, nama) {
+            document.getElementById('edit_kategori_id').value = id;
+            document.getElementById('edit_kategori_nama').value = nama;
+            const modal = new bootstrap.Modal(document.getElementById('editKategoriModal'));
+            modal.show();
+        }
+
+        // Fungsi Delete Kategori Diskon
+        function deleteKategori(id, nama) {
+            if (confirm(`Apakah Anda yakin ingin menghapus kategori diskon "${nama}"?`)) {
+                const formData = new FormData();
+                formData.append('action', 'delete_kategori_diskon');
+                formData.append('id', id);
+                
+                fetch('api_handler.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Kategori diskon berhasil dihapus!');
+                        loadKategoriTable();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error (deleteKategori):', error); // Tambahkan logging
+                    alert('Terjadi kesalahan saat menghapus kategori diskon: ' + error.message); // Tampilkan pesan error
+                });
+            }
+        }
+
+        // Fungsi Edit Aturan Diskon
+        function editAturan(id, jenis_tagihan_id, kategori_diskon_id, diskon_persen, is_aktif) {
+            document.getElementById('edit_aturan_id').value = id;
+            document.getElementById('edit_aturan_jenis_tagihan_id').value = jenis_tagihan_id;
+            document.getElementById('edit_aturan_kategori_diskon_id').value = kategori_diskon_id;
+            document.getElementById('edit_aturan_diskon_persen').value = diskon_persen;
+            document.getElementById('edit_aturan_is_aktif').checked = is_aktif == 1;
+            const modal = new bootstrap.Modal(document.getElementById('editAturanModal'));
+            modal.show();
+        }
+
+        // Fungsi Delete Aturan Diskon
+        function deleteAturan(id, jenis_tagihan_nama, kategori_diskon_nama) {
+            if (confirm(`Apakah Anda yakin ingin menghapus aturan diskon untuk "${jenis_tagihan_nama}" - "${kategori_diskon_nama}"?`)) {
+                const formData = new FormData();
+                formData.append('action', 'delete_diskon_rule');
+                formData.append('id', id);
+                
+                fetch('api_handler.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Aturan diskon berhasil dihapus!');
+                        loadAturanTable();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error (deleteAturan):', error); // Tambahkan logging
+                    alert('Terjadi kesalahan saat menghapus aturan diskon: ' + error.message); // Tampilkan pesan error
+                });
+            }
         }
 
         function updateStatus() {

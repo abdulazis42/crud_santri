@@ -55,7 +55,7 @@ http://localhost:8000/jenis_tagihan.php
 #### **C. Halaman Sistem Diskon**
 ```bash
 # Buka browser dan akses:
-http://localhost:8000/sistem_diskon.php
+http://localhost:8000/sistem_diskon_new.php
 ```
 
 **Test yang Bisa Dilakukan:**
